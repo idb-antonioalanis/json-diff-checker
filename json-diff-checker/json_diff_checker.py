@@ -3,7 +3,14 @@ import subprocess
 import argparse
 
 
+# Base directory of the script.
 BASE_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
+
+# Name of the output directory.
+OUTPUT_DIRECTORY_NAME = "output"
+
+# Extension of the output file.
+OUTPUT_EXTENSION = ".txt"
 
 
 def get_files_in_folder(folder):
@@ -24,47 +31,54 @@ def get_files_in_folder(folder):
     return files
 
 
-def run_json_diff(file1, file2):
+def run_json_diff(file, file2):
     """
     Run json-diff on two JSON files.
 
     Args:
-        file1 (str): The path to the first JSON file.
+        file (str): The path to the first JSON file.
         file2 (str): The path to the second JSON file.
 
     Returns:
         str: The differences between the two JSON files.
     """
-    result = subprocess.run(["json-diff", file1, file2], capture_output=True, text=True)
+    result = subprocess.run(["json-diff", file, file2], capture_output=True, text=True)
     return result.stdout
 
 
 def output_to_file(output, filename):
     """
-    Write the output to a file.
+    Save the provided output to a file in the output directory.
 
     Args:
         output (str): The output to write to the file.
         filename (str): The name of the file.
     """
-    str_output = "".join(output)
+    if not os.path.exists(OUTPUT_DIRECTORY_NAME):
+        os.makedirs(OUTPUT_DIRECTORY_NAME)
 
-    with open(f"{filename}.txt", "w") as f:
-        f.write(str_output)
+    path = os.path.join(OUTPUT_DIRECTORY_NAME, f"{filename}{OUTPUT_EXTENSION}")
+
+    output = "".join(output)
+
+    with open(path, "w") as f:
+        f.write(output)
+
+    print(f"Output saved to {path}.")
 
 
-def process(version, next_version, folder_name, output_filename):
+def process(version, next_version, version_folder_path, output_filename):
     """
     Compare the JSON files in the version folder with the JSON files in the next version folder and output the differences to a file.
 
     Args:
         version (str): The current version to compare.
         next_version (str): The next version to compare.
-        folder_name (str): The base name of the folder for versions.
+        version_folder_path (str): The path of the folder for the first version. For generating the next version folder name, the version number will be automatically replaced with the next version number.
         output_filename (str): The name of the output file.
     """
-    version_folder_name = folder_name
-    next_version_folder_name = folder_name.replace(version, next_version)
+    version_folder_name = version_folder_path
+    next_version_folder_name = version_folder_path.replace(version, next_version)
 
     version_folder_path = os.path.join(BASE_DIRECTORY, version_folder_name)
     next_version_folder_path = os.path.join(BASE_DIRECTORY, next_version_folder_name)
@@ -112,8 +126,6 @@ def process(version, next_version, folder_name, output_filename):
 
     output_to_file(output_lines, output_filename)
 
-    print(f"Output saved to {output_filename}.")
-
 
 def start():
     """
@@ -136,8 +148,8 @@ def start():
         help="The next version to compare.",
     )
     parser.add_argument(
-        "--first_version_folder_name",
-        help="The name of the folder for the first version. No worries! For generating the next version folder name, the version number will be automatically replaced with the next version number.",
+        "--version_folder_path",
+        help="The path of the folder for the first version. For generating the next version folder name, the version number will be automatically replaced with the next version number.",
     )
     parser.add_argument(
         "--output_filename",
@@ -154,7 +166,7 @@ def start():
     process(
         arguments.version,
         arguments.next_version,
-        arguments.first_version_folder_name,
+        arguments.version_folder_path,
         arguments.output_filename,
     )
 
