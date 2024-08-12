@@ -7,7 +7,6 @@
 3. [Installation](#installation)
 4. [Usage](#usage)
     - [Example Usage](#example-usage)
-    - [Example Output File](#example-output-file)
 5. [Command Line Options](#command-line-options)
 6. [Script Functions](#script-functions)
 7. [Contributions](#contributions)
@@ -67,27 +66,58 @@ Replace `<version>`, `<next_version>`, `<folder_name>`, and `<output_file>` with
 
 ### Example Usage
 
-Suppose you have two directories, `v1.0` and `v1.1`, and you want to compare the JSON files in these directories. You can run the script as follows:
+Suppose you have two directories: `/folder-v1` and `/folder-v2`. Each of these directories has three `.json` files:
+
+```
+/folder-v1
+  ├── file_1_v1.json
+  ├── file_2_v1.json
+  └── file_3_v1.json
+
+/folder-v2
+  ├── file_1_v2.json
+  ├── file_2_v2.json
+  └── file_3_v2.json
+```
+
+You want to compare the JSON files in the `/folder-v1` directory against those in the `/folder-v2` directory. You can run the script as follows:
 
 ```bash
-python json_diff_checker.py --version v1.0 --next_version v1.1 --first_version_folder_name folder_v1.0 --output_filename differences.txt
+python json_diff_checker.py --version v1 --next_version v2 --first_version_folder_name folder-v1 --output_filename differences
 ```
 
-This command will compare JSON files in the `v1.0` and `v1.1` directories and save the differences in `differences.txt`.
-
-### Example Output File
-
-Here is an example of what the `differences.txt` file might look like:
+After running the script, the `differences.txt` file captures the key differences between the `v1` and `v2` versions of each of the three `.json` files, clearly highlighting the changes made between versions.
 
 ```
-file1.0.json | file1.1.json
+file_1_v1.json | file_1_v2.json
 
   {
 +   "property": "new_value"
   }
+
+---
+
+file_2_v1.json | file_2_v2.json
+
+  {
++   "property": "updated_value",
+-   "property2": "old_value",
+  }
+
+---
+
+file_3_v1.json | file_3_v2.json
+
+  {
++   "property1": "new_value1",
+-   "property2": "value2"
++   "property3": "new_value2"
+  }
 ```
 
-In version `v1.1`, the property has been updated with "new_value".
+- For `file_1_v1.json`, a new property has been added in version `v2`.
+- In `file_2_v1.json`, an existing property has been updated from "old_value" to "updated_value", and another property has been removed.
+- For `file_3_v1.json`, one property has been updated, one has been removed, and a new one has been added in version `v2`.
 
 ## Contributions
 
