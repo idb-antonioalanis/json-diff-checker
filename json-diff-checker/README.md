@@ -2,14 +2,13 @@
 
 ## Table of Contents
 
-1. [Description](#description)
-2. [Requirements](#requirements)
-3. [Usage](#usage)
+- [Description](#description)
+- [Usage](#usage)
   - [Locally](#locally)
   - [Docker](#docker)
-4. [Example Usage](#example-usage)
-5. [Contributions](#contributions)
-6. [License](#license)
+- [Example Usage](#example-usage)
+- [Contributions](#contributions)
+- [License](#license)
 
 ## Description
 
