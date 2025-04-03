@@ -1,0 +1,12 @@
+# Directories
+**/
+!**/json-diff-checker/
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+# .txt files
+*.txt
